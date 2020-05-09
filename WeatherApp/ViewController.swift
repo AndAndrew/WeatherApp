@@ -9,7 +9,6 @@
 import UIKit
 
 class ViewController: UIViewController {
-// api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={your api key}
     
     @IBOutlet weak var locationLabel: UILabel!
     @IBOutlet weak var imageView: UIImageView!
@@ -23,9 +22,32 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        
+        let icon = WeatherIconManager.rainDay.image
+        let currentWeather = CurrentWeather(temperature: 10.0, appearentTemperature: 5.0, humidity: 30, pressure: 750, icon: icon)
+        updateWith(currentWeather: currentWeather)
+        
+//        let url = URL(string: "https://api.openweathermap.org/data/2.5/weather?lat=\(latitude)&lon=\(longitude)&appid=10e947c470cd64d82b9e40cb86162e8f")
+//
+//        let sessionConfiguration = URLSessionConfiguration.default
+//        let session = URLSession(configuration: sessionConfiguration)
+//
+//        let request = URLRequest(url: url!)
+//        let dataTask = session.dataTask(with: url!) { (data, response, error) in
+//        }
+//        dataTask.resume()
+    }
+    
+    func updateWith(currentWeather: CurrentWeather) {
+        
+        self.imageView.image = currentWeather.icon
+        self.pressureLabel.text = currentWeather.pressureString
+        self.temperatureLabel.text = currentWeather.temperatureString
+        self.appearentTemperatureLabel.text = currentWeather.appearentTemperatureString
+        self.humidityLabel.text = currentWeather.humidityString
+        
     }
 
-
 }
+
 
