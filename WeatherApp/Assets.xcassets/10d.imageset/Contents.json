@@ -1,18 +1,18 @@
 {
   "images" : [
     {
-      "filename" : "icons8-дождь-90.png",
-      "idiom" : "universal",
+      "filename" : "10d.png",
+      "idiom" : "iphone",
       "scale" : "1x"
     },
     {
-      "filename" : "icons8-дождь-91.png",
-      "idiom" : "universal",
+      "filename" : "10d-1.png",
+      "idiom" : "iphone",
       "scale" : "2x"
     },
     {
-      "filename" : "icons8-дождь-92.png",
-      "idiom" : "universal",
+      "filename" : "10d-2.png",
+      "idiom" : "iphone",
       "scale" : "3x"
     }
   ],

@@ -11,6 +11,10 @@ import Foundation
 typealias JSONTask = URLSessionDataTask
 typealias JSONCompletionHandler = ([String: AnyObject]?, HTTPURLResponse?, Error?) -> Void
 
+protocol JSONDecodable {
+    init?(JSON: [String: AnyObject])
+}
+
 protocol FinalURLPoint {
     var baseUrl: URL { get }
     var path: String { get }
@@ -27,7 +31,7 @@ protocol APIManager {
     var session: URLSession { get }
     
     func JSONTaskWith(request: URLRequest, completionHandler: @escaping JSONCompletionHandler) -> JSONTask
-    func fetch<T>(request: URLRequest, parse: @escaping ([String: AnyObject]) -> T?, completionHandler: @escaping (APIResult<T>) -> Void)
+    func fetch<T: JSONDecodable>(request: URLRequest, parse: @escaping ([String: AnyObject]) -> T?, completionHandler: @escaping (APIResult<T>) -> Void)
 }
 
 extension APIManager {
@@ -70,20 +74,22 @@ extension APIManager {
     func fetch<T>(request: URLRequest, parse: @escaping ([String: AnyObject]) -> T?, completionHandler: @escaping (APIResult<T>) -> Void) {
         
         let dataTask = JSONTaskWith(request: request) { (json, response, error) in
-            
-            guard let json = json else {
-                if let error = error {
+            DispatchQueue.main.async {
+                guard let json = json else {
+                    if let error = error {
+                        completionHandler(.Failure(error))
+                    }
+                    return
+                }
+                
+                if let value = parse(json) {
+                    completionHandler(.Success(value))
+                } else {
+                    let error = NSError(domain: WeaNetworkingErrorDomain, code: 200, userInfo: nil)
                     completionHandler(.Failure(error))
                 }
-                return
             }
             
-            if let value = parse(json) {
-                completionHandler(.Success(value))
-            } else {
-                let error = NSError(domain: WeaNetworkingErrorDomain, code: 200, userInfo: nil)
-                completionHandler(.Failure(error))
-            }
         }
         dataTask.resume()
     }

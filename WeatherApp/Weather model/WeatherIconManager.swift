@@ -15,26 +15,26 @@ enum WeatherIconManager: String {
     case fewCloudsDay = "02d"
     case fewCloudsNight = "02n"
     
-    case scatteredCloudsDay = "03d"
-    case scatteredCloudsNight = "03n"
+    case scatteredClouds = "03d"
+//    case scatteredCloudsNight = "03d"
     
-    case brokenCloudsDay = "04d"
-    case brokenCloudsNight = "04n"
+    case brokenClouds = "04d"
+//    case brokenCloudsNight = "04d"
     
-    case showerRainDay = "09d"
-    case showerRainNight = "09n"
+    case showerRain = "09d"
+//    case showerRainNight = "09d"
     
     case rainDay = "10d"
     case rainNight = "10n"
     
-    case thunderstormDay = "11d"
-    case thunderstormNight = "11n"
+    case thunderstorm = "11d"
+//    case thunderstormNight = "11d"
     
-    case snowDay = "13d"
-    case snowNight = "13n"
+    case snow = "13d"
+//    case snowNight = "13d"
     
-    case mistDay = "50d"
-    case mistNight = "50n"
+    case mist = "50d"
+//    case mistNight = "50d"
     
     case unpredictedIcon = "unpredicted icon"
     
@@ -44,16 +44,20 @@ enum WeatherIconManager: String {
         case "01n": self = .clearNight
         case "02d": self = .fewCloudsDay
         case "02n": self = .fewCloudsNight
-        case "03d": self = .scatteredCloudsDay
-        case "03n": self = .scatteredCloudsNight
-        case "04d": self = .clearDay
-        case "04n": self = .clearNight
-        case "09d": self = .clearDay
-        case "09n": self = .clearNight
-        case "10d": self = .clearDay
-        case "10n": self = .clearNight
-        case "11d": self = .clearDay
-        case "11n": self = .clearNight
+        case "03d": self = .scatteredClouds
+        case "03n": self = .scatteredClouds
+        case "04d": self = .brokenClouds
+        case "04n": self = .brokenClouds
+        case "09d": self = .showerRain
+        case "09n": self = .showerRain
+        case "10d": self = .rainDay
+        case "10n": self = .rainNight
+        case "11d": self = .thunderstorm
+        case "11n": self = .thunderstorm
+        case "13d": self = .snow
+        case "13n": self = .snow
+        case "50d": self = .mist
+        case "50n": self = .mist
             
         default:
             self = .unpredictedIcon

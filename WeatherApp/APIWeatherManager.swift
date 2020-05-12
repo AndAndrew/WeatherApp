@@ -49,7 +49,18 @@ final class APIWeatherManager: APIManager {
         self.init(sessionConfiguration: URLSessionConfiguration.default, apiKey: apiKey)
     }
     
-    func fetchCurrentWeatherWith(coordinates: Coordinates, completionHandler: (APIResult<CurrentWeather>) -> Void) {
-        let request = ForecastType.Current(apiKey: self.apiKey, coordinates: coordinates)
+    func fetchCurrentWeatherWith(coordinates: Coordinates, completionHandler: @escaping (APIResult<CurrentWeather>) -> Void) {
+        let request = ForecastType.Current(apiKey: self.apiKey, coordinates: coordinates).request
+        
+        fetch(request: request, parse: { (json) -> CurrentWeather? in
+            var dict: [String: AnyObject]
+            if let dictionary = json["main"] as? [String: AnyObject],
+                let weatherDictionary = json["weather"] as? [[String: AnyObject]] {
+                    dict = dictionary
+                    dict["icon"] = weatherDictionary[0]["icon"]
+                    print(weatherDictionary)
+                    return CurrentWeather(JSON: dict)
+            } else { return nil }
+        }, completionHandler: completionHandler)
     }
 }

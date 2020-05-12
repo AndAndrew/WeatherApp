@@ -20,25 +20,28 @@ class ViewController: UIViewController {
     @IBAction func refreshButtonTapped(_ sender: UIButton) {
     }
     
+    lazy var weatherManager = APIWeatherManager(apiKey: "10e947c470cd64d82b9e40cb86162e8f")
+    let coordinates = Coordinates(latitude: 53.206882, longitude: 50.207949)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let icon = WeatherIconManager.rainDay.image
-        let currentWeather = CurrentWeather(temperature: 10.0, appearentTemperature: 5.0, humidity: 30, pressure: 750, icon: icon)
-        updateWith(currentWeather: currentWeather)
-        
-//        let url = URL(string: "https://api.openweathermap.org/data/2.5/weather?lat=\(latitude)&lon=\(longitude)&appid=10e947c470cd64d82b9e40cb86162e8f")
-//
-//        let sessionConfiguration = URLSessionConfiguration.default
-//        let session = URLSession(configuration: sessionConfiguration)
-//
-//        let request = URLRequest(url: url!)
-//        let dataTask = session.dataTask(with: url!) { (data, response, error) in
-//        }
-//        dataTask.resume()
+        weatherManager.fetchCurrentWeatherWith(coordinates: coordinates) { (result) in
+            switch result {
+            case .Success(let currentWeather):
+                self.updateUIWith(currentWeather: currentWeather)
+            case .Failure(let error as NSError):
+                
+                let alertController = UIAlertController(title: "Unable to get data", message: "\(error.localizedDescription)", preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+                alertController.addAction(okAction)
+                self.present(alertController, animated: true, completion: nil)
+            default: break
+            }
+        }
     }
     
-    func updateWith(currentWeather: CurrentWeather) {
+    func updateUIWith(currentWeather: CurrentWeather) {
         
         self.imageView.image = currentWeather.icon
         self.pressureLabel.text = currentWeather.pressureString
