@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import CoreLocation
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, CLLocationManagerDelegate {
     
     @IBOutlet weak var locationLabel: UILabel!
     @IBOutlet weak var imageView: UIImageView!
@@ -17,16 +18,53 @@ class ViewController: UIViewController {
     @IBOutlet weak var temperatureLabel: UILabel!
     @IBOutlet weak var appearentTemperatureLabel: UILabel!
     @IBOutlet weak var refreshButton: UIButton!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    
+    let locationManager = CLLocationManager()
+    
     @IBAction func refreshButtonTapped(_ sender: UIButton) {
+        toggleActivityIndicator(on: true)
+        getCurrentWeatherData()
+    }
+    
+    func toggleActivityIndicator(on: Bool) {
+        refreshButton.isHidden = on
+        
+        if on  {
+            activityIndicator.startAnimating()
+        } else {
+            activityIndicator.stopAnimating()
+        }
     }
     
     lazy var weatherManager = APIWeatherManager(apiKey: "10e947c470cd64d82b9e40cb86162e8f")
-    let coordinates = Coordinates(latitude: 53.206882, longitude: 50.207949)
+    var coordinates = Coordinates(latitude: 0, longitude: 0)
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestAlwaysAuthorization()
+        locationManager.startUpdatingLocation()
+        
+        
+        getCurrentWeatherData()
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        let userLocation = locations.last! as CLLocation
+        print("\(userLocation.coordinate.latitude), \(userLocation.coordinate.longitude)")
+        self.coordinates.latitude = userLocation.coordinate.longitude
+        self.coordinates.longitude = userLocation.coordinate.longitude
+    }
+    
+    
+    func getCurrentWeatherData() {
+        print("getCurrentWeatherData")
         weatherManager.fetchCurrentWeatherWith(coordinates: coordinates) { (result) in
+            self.toggleActivityIndicator(on: false)
+            
             switch result {
             case .Success(let currentWeather):
                 self.updateUIWith(currentWeather: currentWeather)

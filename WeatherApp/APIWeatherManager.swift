@@ -9,8 +9,8 @@
 import Foundation
 
 struct Coordinates {
-    let latitude: Double
-    let longitude: Double
+    var latitude: Double
+    var longitude: Double
 }
 
 enum ForecastType: FinalURLPoint {
@@ -58,7 +58,6 @@ final class APIWeatherManager: APIManager {
                 let weatherDictionary = json["weather"] as? [[String: AnyObject]] {
                     dict = dictionary
                     dict["icon"] = weatherDictionary[0]["icon"]
-                    print(weatherDictionary)
                     return CurrentWeather(JSON: dict)
             } else { return nil }
         }, completionHandler: completionHandler)
