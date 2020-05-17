@@ -48,20 +48,19 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         locationManager.requestAlwaysAuthorization()
         locationManager.startUpdatingLocation()
         
-        
-        getCurrentWeatherData()
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
+            self.getCurrentWeatherData()
+        }
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let userLocation = locations.last! as CLLocation
-        print("\(userLocation.coordinate.latitude), \(userLocation.coordinate.longitude)")
-        self.coordinates.latitude = userLocation.coordinate.longitude
+        
+        self.coordinates.latitude = userLocation.coordinate.latitude
         self.coordinates.longitude = userLocation.coordinate.longitude
     }
     
-    
     func getCurrentWeatherData() {
-        print("getCurrentWeatherData")
         weatherManager.fetchCurrentWeatherWith(coordinates: coordinates) { (result) in
             self.toggleActivityIndicator(on: false)
             
